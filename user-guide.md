@@ -1,4 +1,4 @@
-# A Talk Application To chat and cideo calls online
+# A Talk Application To chat and video calls online
 
 ## Installation
 
