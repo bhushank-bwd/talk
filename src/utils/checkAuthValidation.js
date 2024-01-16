@@ -1,4 +1,15 @@
-export const validateForm = (email, password) => {
+export const validateForm = (
+  email,
+  password,
+  isLogin = true,
+  username = null
+) => {
+  const usernameRegex = /^[a-zA-Z][a-zA-Z0-9_.]{4,12}$/;
+  if (!isLogin) {
+    const isUsernameValid = usernameRegex.test(username);
+    if (!isUsernameValid) return "Please enter valid username";
+  }
+
   const isEmailValid = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/.test(
     email
   );
