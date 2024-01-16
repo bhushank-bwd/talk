@@ -74,7 +74,7 @@ const Account = () => {
     }
   };
   return (
-    <div className="text-center align-middle p-8 w-4/12 md:w-3/12 sm:w-3/4 md:mx-auto md:my-36 sm:my-8">
+    <div className="text-center align-middle p-8 md:w-3/12 sm:w-3/4 md:mx-auto md:my-36 sm:my-8">
       <h1 className="text-4xl font-bold m-2">
         {isLoginForm ? "Login" : "Register"}
       </h1>

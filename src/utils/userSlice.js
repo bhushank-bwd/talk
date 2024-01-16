@@ -10,7 +10,10 @@ const userSlice = createSlice({
     removeUser: (state, action) => {
       return null;
     },
+    addFireStoreUserDocId: (state, action) => {
+      state.docId = action.payload;
+    },
   },
 });
-export const { addUser, removeUser } = userSlice.actions;
+export const { addUser, removeUser, addFireStoreUserDocId } = userSlice.actions;
 export default userSlice.reducer;
