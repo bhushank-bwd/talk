@@ -1,11 +1,11 @@
 import React from "react";
 
-const ContactItem = () => {
+const ContactItem = ({ displayName }) => {
   return (
     <div className="flex p-2 mt-2">
       <div className="rounded-[50%] h-14 w-16 bg-white mx-2"></div>
       <div className="mx-2 px-2 flex flex-col w-full">
-        <span>Bhushan Kumbhar</span>
+        <span>{displayName}</span>
         <div className="w-full flex justify-between mt-1">
           <span>Good Morning</span>
           <span>Sat</span>

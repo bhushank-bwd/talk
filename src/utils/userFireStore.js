@@ -1,5 +1,6 @@
 import {
   addDoc,
+  doc,
   getDocs,
   query,
   serverTimestamp,
@@ -14,6 +15,8 @@ export const addUserToFireStore = async (user) => {
   if (querySnapshot.size <= 0) {
     const docRef = await addDoc(usersCollectionRef, {
       uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
       docId: "",
       createdAt: serverTimestamp(),
     });
@@ -22,6 +25,12 @@ export const addUserToFireStore = async (user) => {
     });
     return docRef.id;
   } else {
+    const userDocRef = doc(usersCollectionRef, querySnapshot.docs[0].id);
+    const display_name = user.displayName.toLowerCase();
+    await updateDoc(userDocRef, {
+      displayName: user.displayName,
+      display_name: display_name,
+    });
     return querySnapshot.docs[0].id;
   }
 };

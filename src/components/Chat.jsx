@@ -38,7 +38,7 @@ const Chat = () => {
           className="p-2 text-xl cursor-pointer bg-red-600 text-white m-2 rounded-md"
           onClick={logout}
         >
-          Logout
+          Logout {user?.displayName}
         </button>
       </div>
       <div className="flex w-full">
