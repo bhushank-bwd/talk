@@ -1,0 +1,74 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "talk",
+    "dateExported": "2024-01-17T17:05:02.374Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "30ed7527-899c-4ee3-b6ae-ce3dafebce55",
+            "name": "user",
+            "containerId": "",
+            "created": "2024-01-17T14:48:21.461Z",
+            "sortNum": 10000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "7dc41367-4c29-4802-b459-6a946f6f51dd",
+            "colId": "944d68e5-2dd3-470e-82a1-a65dd2954c1b",
+            "containerId": "30ed7527-899c-4ee3-b6ae-ce3dafebce55",
+            "name": "create_user",
+            "url": "http://localhost:5000/api/user/create",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-01-17T14:48:29.611Z",
+            "modified": "2024-01-17T17:04:44.890Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\":\"abcw@gmail.com\",\n  \"displayName\":\"abcw\",\n  \"doc_id\":\"abc123\",\n  \"password\":\"Silo@1234\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "1bbed660-2752-4364-ae70-f3148a2df172",
+            "colId": "944d68e5-2dd3-470e-82a1-a65dd2954c1b",
+            "containerId": "30ed7527-899c-4ee3-b6ae-ce3dafebce55",
+            "name": "update",
+            "url": "http://localhost:5000/api/user/update",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-01-17T16:36:53.704Z",
+            "modified": "2024-01-17T16:40:27.120Z",
+            "headers": [
+                {
+                    "name": "auth-token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjVhODAyODAzMzIyMzBmNzNkMDVmMzA5In0sImlhdCI6MTcwNTUwOTUwNH0.4saHkTTnJzzqrrvLOf7DGTGqQMmFpTuZ6t_ubFVNkkQ"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"displayName\":\"abcEdited\",\n  \"doc_id\":\"abc123edit\",\n  \"auth_id\":\"new_auth_id\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "25868f57-e751-4d66-8c72-270c24f4b062",
+            "colId": "944d68e5-2dd3-470e-82a1-a65dd2954c1b",
+            "containerId": "30ed7527-899c-4ee3-b6ae-ce3dafebce55",
+            "name": "search",
+            "url": "http://localhost:5000/api/user/search/bc",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-01-17T17:00:34.439Z",
+            "modified": "2024-01-17T17:04:52.873Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ]
+}
