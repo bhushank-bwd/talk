@@ -1,28 +1,39 @@
-import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { auth } from "../utils/fireBase";
-import { useDispatch } from "react-redux";
-import { addUser, removeUser } from "../utils/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import getToken from "../utils/getToken";
 
 const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((store) => store);
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const { uid, email, displayName, photoURL } = user;
-        dispatch(addUser({ uid, email, displayName, photoURL }));
-        navigate("/chat");
+    const authtoken = getToken();
+    if (authtoken) {
+      if (user?.uid) {
       } else {
-        dispatch(removeUser());
-        navigate("/");
+        getUser(authtoken);
       }
-    });
-    return () => {
-      unsubscribe();
-    };
+      navigate("/chat");
+    } else {
+      navigate("/");
+    }
   }, []);
+  const getUser = async (authtoken) => {
+    let getUserResult = await fetch("http://localhost:5000/api/user/get-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        authtoken,
+      }),
+    });
+    getUserResult = await getUserResult.json();
+    const { uid, email, username } = getUserResult;
+    dispatch(addUser({ uid, email, username }));
+  };
   return (
     <>
       <Outlet />

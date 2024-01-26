@@ -1,14 +1,9 @@
 import React, { useRef, useState } from "react";
 import { validateForm } from "../utils/checkAuthValidation";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
-import { auth } from "../utils/fireBase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import Cookies from "js-cookie";
 
 const Account = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
@@ -19,58 +14,60 @@ const Account = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const toggleSignInForm = () => {
-    setIsLoginForm(!isLoginForm);
+  const addUserToServer = async (email, username, password) => {
+    let addUserResult = await fetch("http://localhost:5000/api/user/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        username,
+        password,
+      }),
+    });
+    addUserResult = await addUserResult.json();
+    return addUserResult;
   };
-  const authUser = () => {
-    const username =
+  const checkLogin = async (email, password) => {
+    let checkLogin = await fetch("http://localhost:5000/api/user/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: email,
+        password,
+      }),
+    });
+    checkLogin = await checkLogin.json();
+    return checkLogin;
+  };
+
+  const authUser = async () => {
+    let username =
       !isLoginForm && usernameRef !== null ? usernameRef.current.value : null;
-    let message = validateForm(
-      emailRef.current.value,
-      passwordRef.current.value,
-      isLoginForm,
-      username
-    );
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    let message = validateForm(email, password, isLoginForm, username);
     setErrMsg(message);
     if (message) return;
+    let res = null;
     if (isLoginForm) {
-      signInWithEmailAndPassword(
-        auth,
-        emailRef.current.value,
-        passwordRef.current.value
-      )
-        .then((userCredential) => {
-          navigate("/chat");
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          setErrMsg(errorCode + "-" + errorMessage);
-        });
+      res = await checkLogin(email, password);
     } else {
-      createUserWithEmailAndPassword(
-        auth,
-        emailRef.current.value,
-        passwordRef.current.value
-      )
-        .then((userCredential) => {
-          updateProfile(auth.currentUser, {
-            displayName: usernameRef.current.value,
-          })
-            .then(() => {
-              const { uid, email, displayName, photoURL } = auth.currentUser;
-              dispatch(addUser({ uid, email, displayName, photoURL }));
-              navigate("/chat");
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          setErrMsg(errorCode + "-" + errorMessage);
-        });
+      res = await addUserToServer(email, username, password);
+    }
+    if (res.status) {
+      const uid = res.id;
+      if (res.username) {
+        username = res.username;
+      }
+      dispatch(addUser({ email, username, password, uid }));
+      Cookies.set("authtoken", res.authtoken, { expires: 1 });
+      navigate("/chat");
+    } else {
+      alert(res.message);
     }
   };
   return (
@@ -112,7 +109,10 @@ const Account = () => {
           {isLoginForm ? "Login" : "Register"}
         </button>
         <p className="text-red-600">{errMsg}</p>
-        <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>
+        <p
+          className="py-4 cursor-pointer"
+          onClick={(_) => setIsLoginForm(!isLoginForm)}
+        >
           {isLoginForm
             ? "New to Talk? Register Now"
             : "Already registered? Login Now."}
